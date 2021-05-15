@@ -2,16 +2,16 @@
 A basic ASP.NET Core skeleton foundation for a project including setup for:
 - A React frontend
 - Clean Architecture approach with domain layers
--- API
---- ASP.NET Core Web API
--- Application 
---- Class Library
--- Domain
---- Class Library
--- Persistence
---- Class library
---- Entity Framework
---- SQLite Databases
+  - API
+    - ASP.NET Core Web API
+  - Application 
+    - Class Library
+  - Domain
+    - Class Library
+  - Persistence
+    - Class library
+    - Entity Framework
+    - SQLite Databases
 
 ## .NET CLI Commands
 Check .NET SDK and runtime version.
@@ -87,7 +87,7 @@ Get more robust info in the console.
 - Set Logging -> LogLevel -> Microsoft: Information 
 
 #### Startup.cs
--- In the Configure() method comment out app.UseHttpsRedirection()
+- In the Configure() method comment out app.UseHttpsRedirection()
 
 #### VSCode
 - Toggle File > Auto Save if needed
@@ -123,10 +123,10 @@ cd ../Persistence
 ### Add NuGet Packages
 Make sure NuGet package versions match the version of .NET Core you are using.
 - Add to /Persistence
--- Microsoft.EntityFrameworkCore
--- Microsoft.EntityFrameworkCore.Sqlite
+  - Microsoft.EntityFrameworkCore
+  - Microsoft.EntityFrameworkCore.Sqlite
 - Add to /API
--- Microsoft.EntityFrameworkCore.Design
+  - Microsoft.EntityFrameworkCore.Design
 
 ## DbContext Setup
 Delete the default Class1.cs file in /Persistence.
@@ -135,8 +135,8 @@ Delete the default Class1.cs file in /Persistence.
 - Create a New C# Class file named DataContext.cs
 - Make DataContext class derive from DbContext
 - Add a constructor for DataContext
--- Constructor should take parameter DbContextOptions options
--- Also pass options to the base class constructor
+  - Constructor should take parameter DbContextOptions options
+  - Also pass options to the base class constructor
 - Add a property of type DbSet<YOURDOMAIN> to DataContext for each domain entity
 
 ### /API/Startup.cs
