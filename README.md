@@ -13,6 +13,11 @@ A basic ASP.NET Core skeleton foundation for a project including setup for:
     - Entity Framework
     - SQLite Databases
 
+Credit for the skeleton to 
+https://www.udemy.com/course/complete-guide-to-building-an-app-with-net-core-and-react/
+
+Documentation below typed in by Scott Neidig.
+
 ## .NET CLI Commands
 Check .NET SDK and runtime version.
 ```
