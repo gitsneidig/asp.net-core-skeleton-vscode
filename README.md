@@ -215,7 +215,6 @@ dotnet ef -h
 ```
 
 ### Add the Initial Migration
-
 Note the use of switches
 - -p specifies which project has DbContext file
 - -s specifies startup project
@@ -226,7 +225,6 @@ dotnet ef migrations add InitialCreate -p Persistence/ -s API/
 A new Migrations directory containing should appear in /Persistence containing associated migration files.
 
 ### Update Program.cs to Create Database on Startup if it is Missing
-
 This code provides access to the DataContext using the ServicesProvider. Using the DataContext service context.Database.Migrate() can be run on startup to apply any pending migrations for the context to the database, and create the database if it does not already exist. 
 
 ```
@@ -264,5 +262,83 @@ Run the application from the terminal and afterwards you should see a new Sqlite
 
 Use Sqlite extension in VSCode to view database context and confirm tables exist for domain entities.
 
+## Seed Data
+### Add Seed class
+Inside the /Persistence directory create a New C# Class file named Seed.cs.
 
+To start seeding the database with data create objects for your entity domains. 
 
+Inside the Seed class create a public static async method called SeedData that takes a parameter of type DataContext.
+
+For each domain entity associated with the DataContext object, create a conditional statement that checks to see if there is already data in the database for the entity. 
+```
+if (context.Activities.Any()) { ... }
+```
+Inside the conditional create a new List<YOURDOMAIN> that and load it with new objects for your domain.
+
+If there is already data then creating this list will be skipped, if there is no data the value from your list will be used to seed the database.
+
+Underneath the list declaration code add code to the new list to tracked context items and then SaveChanges.
+```
+await context.Activities.AddRangeAsync(activities);
+await context.SaveChangesAsync();
+```
+
+### Run SeedData() Method from Program.cs
+Call the static method SeedData in the new Seed class from the try/catch block in Program.cs and pass it the context from services.
+```
+await Seed.SeedData(context);
+```
+
+Update the Main method to be async and return a Task.
+```
+public static async Task Main(string[] args) { ... }
+```
+
+In the try/catch block update the call to Migrate the context to use await and MigrateAsync.
+```
+await context.Database.MigrateAsync();
+```
+
+Update the call to Run to use await and RunAsync.
+```
+await host.RunAsync();
+```
+
+There is no real benefit to adding Async to all these methods since the Program class will only be called once at the start of the application, but it does no harm.
+
+Run dotnet watch run in the /API directory and check SQLite to confirm seed rows are present.
+
+## Setup API Controller
+### Add a Base API Controller
+In /API/Controllers create a BaseApiController class and update the following:
+- BaseApiController derives from ControllerBase
+- BaseApiController has the [ApiController] attribute
+- BaseApiController has a Route("api/[controller]") as a placeholder
+
+All controllers in the project will derive from this controller.
+
+### Add an API Controller for Domain Entities
+In /API/Controllers create a YOURDOMAINController class and update the following:
+- YOURDOMAINController derives from BaseApiController
+- Add constructor
+  - Inject DataContext parameter
+  - Initialize field from parameter
+
+### Add a Few Basic Test Methods to Handle GET Requests to the New Controller Classes
+```
+[HttpGet]
+public async Task<ActionResult<List<Activity>>> GetActivities() {
+  return await _context.Activities.ToListAsync();
+}
+
+[HttpGet("{id}")] //activities/id
+public async Task<ActionResult<Activity>> GetActivity(System.Guid id) {
+  return await _context.Activities.FindAsync(id);
+}
+```
+
+Restart the application if needed and test the new endpoints.
+http://localhost:5010/api/activities
+http://localhost:5010/api/YOURDOMAIN
+http://localhost:5010/api/activities/8bbf8713-7ada-4a04-ba6d-bf08faa170c5
