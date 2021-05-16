@@ -339,6 +339,10 @@ public async Task<ActionResult<Activity>> GetActivity(System.Guid id) {
 ```
 
 Restart the application if needed and test the new endpoints.
-http://localhost:5010/api/activities
-http://localhost:5010/api/YOURDOMAIN
-http://localhost:5010/api/activities/8bbf8713-7ada-4a04-ba6d-bf08faa170c5
+- http://localhost:5010/api/activities
+- http://localhost:5010/api/YOURDOMAIN
+- http://localhost:5010/api/activities/8bbf8713-7ada-4a04-ba6d-bf08faa170c5
+
+## Source Control
+- Add gitignore file for .net applications
+- Add appsettings.json to gitignore (and any other files that may hold sensitive credentials)
